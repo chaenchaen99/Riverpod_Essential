@@ -1,0 +1,15 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: false
+
+analyzer:
+  exclude: //generated된 파일에서 lint 워닝이 표시되지 않도록.
+    - '**/*.freezed.dart'
+    - '**/*.g.dart'
+    
+    
+
+
+
