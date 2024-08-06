@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:riverpod_freezed/pages/hotel_list_page.dart';
 import 'package:riverpod_freezed/pages/mutable_person_page.dart';
 import 'package:riverpod_freezed/pages/person_page.dart';
 import 'package:riverpod_freezed/widgets/custom_button.dart';
@@ -42,6 +43,10 @@ class MyHomePage extends StatelessWidget {
             CustomButton(
               title: 'Mutable Person',
               child: MutablePersonPage(),
+            ),
+            CustomButton(
+              title: 'Hotel List',
+              child: HotelListPage(),
             ),
           ],
         ),
