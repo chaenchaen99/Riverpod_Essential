@@ -5,6 +5,8 @@ linter:
     avoid_print: false
 
 analyzer:
+  errors:
+    invalid_annotation_target: ignore
   exclude: //generated된 파일에서 lint 워닝이 표시되지 않도록.
     - '**/*.freezed.dart'
     - '**/*.g.dart'
