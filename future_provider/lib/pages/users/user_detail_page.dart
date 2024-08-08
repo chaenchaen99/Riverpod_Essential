@@ -19,32 +19,37 @@ class UserDetailPage extends ConsumerWidget {
       ),
       body: userDetail.when(
         data: (user) {
-          return ListView(
-            padding: const EdgeInsets.symmetric(
-              vertical: 40,
-              horizontal: 20,
+          return RefreshIndicator(
+            onRefresh: () => ref.refresh(userDetailProvider(userId).future),
+            child: ListView(
+              physics:
+                  const AlwaysScrollableScrollPhysics(), //콘텐츠 크기가 뷰 포트보다 작더라도 사용자가 스크롤 제스처를 사용할 수 있도록 한다.
+              padding: const EdgeInsets.symmetric(
+                vertical: 40,
+                horizontal: 20,
+              ),
+              children: [
+                Text(
+                  user.name,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const Divider(),
+                UserInfo(
+                  iconData: Icons.email_rounded,
+                  userInfo: user.email,
+                ),
+                const Divider(),
+                UserInfo(
+                  iconData: Icons.phone_enabled,
+                  userInfo: user.phone,
+                ),
+                const Divider(),
+                UserInfo(
+                  iconData: Icons.web_rounded,
+                  userInfo: user.website,
+                ),
+              ],
             ),
-            children: [
-              Text(
-                user.name,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const Divider(),
-              UserInfo(
-                iconData: Icons.email_rounded,
-                userInfo: user.email,
-              ),
-              const Divider(),
-              UserInfo(
-                iconData: Icons.phone_enabled,
-                userInfo: user.phone,
-              ),
-              const Divider(),
-              UserInfo(
-                iconData: Icons.web_rounded,
-                userInfo: user.website,
-              ),
-            ],
           );
         },
         error: (e, st) {

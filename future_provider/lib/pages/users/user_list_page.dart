@@ -9,35 +9,44 @@ class UserListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userList = ref.watch(userListProvider);
+    print(userList);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('User List'),
       ),
       body: userList.when(
+          skipLoadingOnRefresh: false,
           data: (users) {
-            return ListView.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  final user = users[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) {
-                        return UserDetailPage(userId: user.id);
-                      }));
-                    },
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        child: Text(user.id.toString()),
+            return RefreshIndicator(
+              onRefresh: () async {
+                return ref.invalidate(userListProvider);
+              },
+              color: Colors.red,
+              child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    final user = users[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return UserDetailPage(userId: user.id);
+                        }));
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: Text(user.id.toString()),
+                        ),
+                        title: Text(user.name),
                       ),
-                      title: Text(user.name),
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const Divider();
-                },
-                itemCount: users.length);
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Divider();
+                  },
+                  itemCount: users.length),
+            );
           },
           error: (e, st) {
             return Center(
