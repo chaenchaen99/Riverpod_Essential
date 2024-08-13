@@ -81,6 +81,8 @@ GoRouter route(RouteRef ref) {
                   builder: (context, state) => const SecondPage(),
                   routes: [
                     GoRoute(
+                      parentNavigatorKey:
+                          _rootNavigatorKey, //bottom navigator bar 위에 표시하고싶다면 설정
                       path: 'details/:id',
                       name: RouteNames.secondDetails,
                       builder: (context, state) {
