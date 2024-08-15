@@ -12,17 +12,19 @@ class WeatherRepository {
 
   Future<CurrentWeather> fetchWeather(String city) async {
     try {
+      print('test: $city');
+
       final DirectGeocoding directGeocoding =
           await weatherApiServices.geoDirectGeocoding(city);
-      // print('directGeocoding: $directGeocoding');
+      print('directGeocoding: $directGeocoding');
 
       final CurrentWeather tempWeather =
           await weatherApiServices.getWeather(directGeocoding);
-      // print('currentWeather: $tempWeather');
+      print('currentWeather: $tempWeather');
       final CurrentWeather currentWeather = tempWeather.copyWith(
           name: directGeocoding.name,
           sys: tempWeather.sys.copyWith(country: directGeocoding.country));
-      // print('currentWeather: $currentWeather');
+      print('currentWeather: $currentWeather');
 
       return currentWeather;
     } on WeatherException catch (e) {

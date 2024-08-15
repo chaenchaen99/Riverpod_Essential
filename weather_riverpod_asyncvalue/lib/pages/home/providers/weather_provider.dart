@@ -15,10 +15,10 @@ class Weather extends _$Weather {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final CurrentWeather =
+      final currentWeather =
           await ref.read(weatherRepositoryProvider).fetchWeather(city);
 
-      return CurrentWeather;
+      return currentWeather;
     });
   }
 }
