@@ -5,127 +5,123 @@ import 'package:weather_riverpod_asyncvalue/pages/home/widgets/format_text.dart'
 import 'package:weather_riverpod_asyncvalue/pages/home/widgets/select_city.dart';
 import 'package:weather_riverpod_asyncvalue/pages/home/widgets/show_temperature.dart';
 import '../../../models/current_weather/current_weather.dart';
-import '../../../models/custom_error/custom_error.dart';
+import '../providers/weather_state.dart';
 import 'show_icon.dart';
 
-class ShowWeather extends ConsumerWidget {
-  final AsyncValue<CurrentWeather?> weatherState;
-  const ShowWeather({super.key, required this.weatherState});
+class ShowWeather extends ConsumerStatefulWidget {
+  final WeatherState weatherState;
+  const ShowWeather({
+    super.key,
+    required this.weatherState,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return weatherState.when(
-        skipError: true,
-        data: (CurrentWeather? weather) {
-          print("**** in data callback");
+  ConsumerState<ShowWeather> createState() => _ShowWeatherState();
+}
 
-          if (weather == null) {
-            return const SelectCity();
-          }
+class _ShowWeatherState extends ConsumerState<ShowWeather> {
+  Widget prevWeatherWidget = const SizedBox.shrink();
+  @override
+  Widget build(BuildContext context) {
+    final weatherState = widget.weatherState;
 
-          final appWeather = AppWeather.fromCurrentWeather(weather);
-          return ListView(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 6,
-              ),
-              Text(
-                appWeather.name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40.0,
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    TimeOfDay.fromDateTime(DateTime.now()).format(context),
-                    style: const TextStyle(fontSize: 18.0),
-                  ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  Text(
-                    '(${appWeather.country})',
-                    style: const TextStyle(fontSize: 18.0),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 60.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ShowTemperature(
-                    temperature: appWeather.temp,
-                    fontSize: 30.0,
-                    fontweight: FontWeight.bold,
-                  ),
-                  const SizedBox(width: 20.0),
-                  Column(
-                    children: [
-                      ShowTemperature(
-                        temperature: appWeather.tempMax,
-                        fontSize: 16.0,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      ShowTemperature(
-                        temperature: appWeather.tempMin,
-                        fontSize: 16.0,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 40.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Spacer(),
-                  ShowIcon(icon: appWeather.icon),
-                  Expanded(
-                    flex: 3,
-                    child: FormatText(
-                      description: appWeather.description,
-                    ),
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ],
-          );
-        },
-        error: (error, StackTrace) {
-          print('**** in error callback');
-          if (weatherState.value == null) {
-            return const SelectCity();
-          }
+    switch (weatherState) {
+      case WeatherStateInitial():
+        return const SelectCity();
+      case WeatherStateLoading():
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      case WeatherStateSuccess(currentWeather: CurrentWeather currentWeather):
+        final appWeather = AppWeather.fromCurrentWeather(currentWeather);
 
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Text(
-                (error as CustomError).errMsg,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18.0),
+        prevWeatherWidget = ListView(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 6,
+            ),
+            Text(
+              appWeather.name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 40.0,
               ),
             ),
-          );
-        },
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+            const SizedBox(
+              height: 10.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  TimeOfDay.fromDateTime(DateTime.now()).format(context),
+                  style: const TextStyle(fontSize: 18.0),
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  '(${appWeather.country})',
+                  style: const TextStyle(fontSize: 18.0),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 60.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ShowTemperature(
+                  temperature: appWeather.temp,
+                  fontSize: 30.0,
+                  fontweight: FontWeight.bold,
+                ),
+                const SizedBox(width: 20.0),
+                Column(
+                  children: [
+                    ShowTemperature(
+                      temperature: appWeather.tempMax,
+                      fontSize: 16.0,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    ShowTemperature(
+                      temperature: appWeather.tempMin,
+                      fontSize: 16.0,
+                    ),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 40.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Spacer(),
+                ShowIcon(icon: appWeather.icon),
+                Expanded(
+                  flex: 3,
+                  child: FormatText(
+                    description: appWeather.description,
+                  ),
+                ),
+                const Spacer(),
+              ],
+            ),
+          ],
+        );
+
+        return prevWeatherWidget;
+
+      case WeatherStateFailure(error: _):
+        return prevWeatherWidget is SizedBox
+            ? const SelectCity()
+            : prevWeatherWidget;
+    }
   }
 }
