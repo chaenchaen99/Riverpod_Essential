@@ -1,0 +1,12 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: false //print를 사용할때 경고 표시되지 않도록
+
+analyzer:
+  plugins:
+    - custom_lint
+  exclude: // generated파일에서 발생하는 lint warning이 발생하지 않도록
+    - '**/*.freezed.dart' 
+    - '**/*.g.dart'
