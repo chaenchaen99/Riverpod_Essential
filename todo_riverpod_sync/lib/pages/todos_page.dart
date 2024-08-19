@@ -3,6 +3,7 @@ import 'package:todo_riverpod_sync/pages/widgets/new_todo.dart';
 import 'package:todo_riverpod_sync/pages/widgets/search_todo.dart';
 
 import 'widgets/filter_todo.dart';
+import 'widgets/show_todos.dart';
 import 'widgets/todo_header.dart';
 
 class TodosPage extends StatelessWidget {
@@ -22,6 +23,7 @@ class TodosPage extends StatelessWidget {
               SearchTodo(),
               SizedBox(height: 10),
               FilterTodo(),
+              Expanded(child: ShowTodos()),
             ],
           ),
         ),
