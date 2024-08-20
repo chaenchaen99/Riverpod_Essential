@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_riverpod_sync/pages/providers/filtered_todos/filtered_todos_provider.dart';
+import 'package:todo_riverpod_sync/pages/providers/todo_item/todo_item_provider.dart';
 import 'package:todo_riverpod_sync/pages/widgets/todo_item.dart';
 
 class ShowTodos extends ConsumerWidget {
@@ -13,7 +14,9 @@ class ShowTodos extends ConsumerWidget {
     return ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final todo = filterTodos[index];
-          return TodoItem(todo: todo);
+          return ProviderScope(overrides: [
+            todoItemProvider.overrideWithValue(todo),
+          ], child: const TodoItem());
         },
         separatorBuilder: (BuildContext context, int index) {
           return Divider(color: Colors.grey);
