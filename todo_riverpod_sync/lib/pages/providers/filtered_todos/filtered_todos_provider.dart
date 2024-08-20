@@ -15,6 +15,7 @@ List<Todo> filtedTodos(FiltedTodosRef ref) {
 
   List<Todo> tempTodos;
   tempTodos = switch (filter) {
+    //사용자가 todo "완료/미완료/모든" 버튼을 클릭했을때 제공할 리스트 필터링
     Filter.active => todos.where((todo) => !todo.completed).toList(),
     Filter.completed => todos.where((todo) => todo.completed).toList(),
     Filter.all => todos,
