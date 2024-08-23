@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_riverpod_sync/pages/providers/active_todo_count/active_todo_count_provider.dart';
 import 'package:todo_riverpod_sync/pages/providers/todo_list/todo_list_provider.dart';
+import 'package:todo_riverpod_sync/pages/theme/theme_provider.dart';
 
 class TodoHeader extends ConsumerWidget {
   const TodoHeader({super.key});
@@ -12,22 +13,33 @@ class TodoHeader extends ConsumerWidget {
     final todos = ref.watch(todoListProvider);
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          'TODO',
-          style: TextStyle(
-            fontSize: 36.0,
-          ),
+        Row(
+          children: [
+            Text(
+              'TODO',
+              style: TextStyle(
+                fontSize: 36.0,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              '($activeTodoCount/${todos.length} item${activeTodoCount != 1 ? "s" : ""} left)',
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Colors.blue,
+              ),
+            ),
+          ],
         ),
-        SizedBox(
-          width: 10,
-        ),
-        Text(
-          '($activeTodoCount/${todos.length} item${activeTodoCount != 1 ? "s" : ""} left)',
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.blue,
-          ),
+        IconButton(
+          onPressed: () {
+            ref.read(themeProvider.notifier).toggleTheme();
+          },
+          icon: Icon(Icons.light_mode),
         ),
       ],
     );
