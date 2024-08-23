@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 //uuid: 각 todo를 unique하게 구분할 string type의 id를 생성하기 위해
 
 part 'todo_model.freezed.dart';
+part 'todo_model.g.dart';
 
 Uuid uuid = Uuid();
 
@@ -18,6 +19,7 @@ class Todo with _$Todo {
   factory Todo.add({required String desc}) {
     return Todo(id: uuid.v4(), desc: desc);
   }
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }
 
 enum Filter {
