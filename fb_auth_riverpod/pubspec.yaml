@@ -24,7 +24,7 @@ dependencies:
   validators: ^3.0.0
 
 dev_dependencies:
-  analyzer: ^6.8.0
+  analyzer: ^6.2.0
   build_runner: ^2.4.6
   custom_lint: ^0.5.3
   flutter_lints: ^2.0.0
